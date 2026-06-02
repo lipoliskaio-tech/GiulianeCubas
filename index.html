@@ -1,0 +1,1113 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Giu Cubas — Visual Storyteller & UGC Cinematográfica</title>
+  <meta name="description" content="Narrativas visuais cinematográficas para hotéis, pousadas, restaurantes e marcas de lifestyle. UGC premium com estética editorial." />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ─── TOKENS ─── */
+    :root {
+      --gold: #c9a96e;
+      --gold-light: #e8d5b0;
+      --dark: #0d0d0b;
+      --dark-mid: #141410;
+      --dark-warm: #1a1915;
+      --off-white: #f5f0e8;
+      --text-muted: #8a8070;
+      --transition: 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* ─── RESET ─── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+    body {
+      background: var(--dark);
+      color: var(--off-white);
+      font-family: 'Jost', sans-serif;
+      font-weight: 300;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+    img { max-width: 100%; display: block; }
+    a { color: inherit; text-decoration: none; }
+
+    /* ─── SCROLLBAR ─── */
+    ::-webkit-scrollbar { width: 3px; }
+    ::-webkit-scrollbar-track { background: var(--dark); }
+    ::-webkit-scrollbar-thumb { background: var(--gold); }
+
+    /* ─── UTILITIES ─── */
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 1.5rem; }
+    .label {
+      font-family: 'Jost', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 400;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 400;
+      line-height: 1.15;
+      color: var(--off-white);
+    }
+    .gold-line {
+      width: 40px;
+      height: 1px;
+      background: var(--gold);
+      display: block;
+    }
+
+    /* ─── FADE-IN ANIMATION ─── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.9s ease, transform 0.9s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ════════════════════════════════
+       NAV
+    ════════════════════════════════ */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 1.25rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: background 0.5s ease, padding 0.4s ease;
+    }
+    nav.scrolled {
+      background: rgba(13, 13, 11, 0.92);
+      backdrop-filter: blur(12px);
+      padding: 0.85rem 1.5rem;
+      border-bottom: 1px solid rgba(201, 169, 110, 0.12);
+    }
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.15rem;
+      font-weight: 400;
+      letter-spacing: 0.12em;
+      color: var(--gold-light);
+    }
+    .nav-cta {
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      padding: 0.55rem 1.4rem;
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      transition: all 0.3s ease;
+    }
+    .nav-cta:hover {
+      background: var(--gold);
+      color: var(--dark);
+    }
+
+    /* ════════════════════════════════
+       HERO
+    ════════════════════════════════ */
+    #hero {
+      position: relative;
+      height: 100svh;
+      min-height: 600px;
+      display: flex;
+      align-items: flex-end;
+      overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background-image: url('fotos/photo-bw.jpg');
+      background-size: cover;
+      background-position: center top;
+      filter: grayscale(100%);
+      transform: scale(1.04);
+      transition: transform 8s ease;
+    }
+    #hero.loaded .hero-bg { transform: scale(1); }
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to bottom,
+        rgba(13,13,11,0.15) 0%,
+        rgba(13,13,11,0.2) 40%,
+        rgba(13,13,11,0.85) 80%,
+        rgba(13,13,11,1) 100%
+      );
+    }
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      padding: 0 1.5rem 4rem;
+      max-width: 820px;
+      width: 100%;
+      margin: 0 auto;
+    }
+    .hero-eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.2rem;
+      opacity: 0;
+      animation: fadeUp 1s ease 0.4s forwards;
+    }
+    .hero-h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.6rem, 8vw, 5.5rem);
+      font-weight: 300;
+      line-height: 1.05;
+      color: var(--off-white);
+      margin-bottom: 1.4rem;
+      opacity: 0;
+      animation: fadeUp 1s ease 0.6s forwards;
+    }
+    .hero-h1 em {
+      font-style: italic;
+      color: var(--gold-light);
+    }
+    .hero-sub {
+      font-size: clamp(0.8rem, 2.2vw, 0.95rem);
+      font-weight: 300;
+      color: rgba(245,240,232,0.65);
+      max-width: 480px;
+      margin-bottom: 2.2rem;
+      letter-spacing: 0.04em;
+      opacity: 0;
+      animation: fadeUp 1s ease 0.8s forwards;
+    }
+    .hero-actions {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      opacity: 0;
+      animation: fadeUp 1s ease 1s forwards;
+    }
+    .btn-primary {
+      display: inline-block;
+      background: var(--gold);
+      color: var(--dark);
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      padding: 1rem 2.2rem;
+      transition: all 0.3s ease;
+    }
+    .btn-primary:hover {
+      background: var(--gold-light);
+      transform: translateY(-2px);
+    }
+    .btn-ghost {
+      display: inline-block;
+      border: 1px solid rgba(245,240,232,0.3);
+      color: rgba(245,240,232,0.7);
+      font-size: 0.65rem;
+      font-weight: 400;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      padding: 1rem 2.2rem;
+      transition: all 0.3s ease;
+    }
+    .btn-ghost:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+    .hero-scroll {
+      position: absolute;
+      bottom: 1.8rem;
+      right: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.4rem;
+      opacity: 0;
+      animation: fadeUp 1s ease 1.4s forwards;
+    }
+    .hero-scroll span {
+      font-size: 0.55rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      writing-mode: vertical-rl;
+    }
+    .scroll-line {
+      width: 1px;
+      height: 50px;
+      background: linear-gradient(to bottom, var(--gold), transparent);
+      animation: scrollPulse 2s ease infinite;
+    }
+
+    /* ─── METRICS STRIP ─── */
+    #metrics-strip {
+      background: var(--dark-warm);
+      border-top: 1px solid rgba(201,169,110,0.15);
+      border-bottom: 1px solid rgba(201,169,110,0.15);
+      padding: 2rem 1.5rem;
+    }
+    .metrics-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      text-align: center;
+    }
+    .metric-item {
+      padding: 1rem;
+    }
+    .metric-item:not(:last-child) {
+      border-right: 1px solid rgba(201,169,110,0.15);
+    }
+    .metric-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.8rem, 5vw, 2.8rem);
+      font-weight: 400;
+      color: var(--gold);
+      line-height: 1;
+    }
+    .metric-label {
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-top: 0.4rem;
+    }
+
+    /* ════════════════════════════════
+       SOBRE
+    ════════════════════════════════ */
+    #sobre {
+      padding: 8rem 0;
+    }
+    .sobre-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: center;
+    }
+    .sobre-img-wrap {
+      position: relative;
+    }
+    .sobre-img-wrap::before {
+      content: '';
+      position: absolute;
+      top: -1.5rem;
+      left: -1.5rem;
+      right: 1.5rem;
+      bottom: 1.5rem;
+      border: 1px solid rgba(201,169,110,0.25);
+      z-index: 0;
+    }
+    .sobre-img {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      aspect-ratio: 3/4;
+      object-fit: cover;
+      object-position: top;
+      filter: sepia(8%);
+    }
+    .sobre-text { display: flex; flex-direction: column; gap: 1.4rem; }
+    .sobre-text .section-title { margin: 0.5rem 0; }
+    .sobre-quote {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.1rem, 2.5vw, 1.35rem);
+      font-style: italic;
+      font-weight: 300;
+      color: var(--gold-light);
+      line-height: 1.5;
+      border-left: 2px solid var(--gold);
+      padding-left: 1.2rem;
+    }
+    .sobre-body {
+      font-size: 0.9rem;
+      color: rgba(245,240,232,0.7);
+      line-height: 1.85;
+    }
+
+    /* ════════════════════════════════
+       DIFERENCIAIS
+    ════════════════════════════════ */
+    #diferenciais {
+      padding: 7rem 0;
+      background: var(--dark-warm);
+    }
+    .diferenciais-head {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+    .diferenciais-head .section-title { margin: 0.8rem auto 0; }
+    .diferenciais-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5px;
+      background: rgba(201,169,110,0.12);
+    }
+    .diferencial-card {
+      background: var(--dark-warm);
+      padding: 2.5rem 2rem;
+      transition: background 0.3s ease;
+    }
+    .diferencial-card:hover {
+      background: #1e1d18;
+    }
+    .dif-number {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 3rem;
+      color: rgba(201,169,110,0.15);
+      font-weight: 300;
+      line-height: 1;
+      margin-bottom: 1rem;
+    }
+    .dif-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.25rem;
+      font-weight: 500;
+      color: var(--gold-light);
+      margin-bottom: 0.6rem;
+    }
+    .dif-body {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      line-height: 1.8;
+    }
+
+    /* ════════════════════════════════
+       NICHOS
+    ════════════════════════════════ */
+    #nichos {
+      padding: 7rem 0;
+    }
+    .nichos-head { margin-bottom: 3.5rem; }
+    .nichos-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+    }
+    .nicho-card {
+      border: 1px solid rgba(201,169,110,0.15);
+      padding: 2rem;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.3s ease, transform 0.3s ease;
+    }
+    .nicho-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--gold);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.4s ease;
+    }
+    .nicho-card:hover { border-color: rgba(201,169,110,0.35); transform: translateY(-3px); }
+    .nicho-card:hover::after { transform: scaleX(1); }
+    .nicho-icon {
+      font-size: 1.6rem;
+      margin-bottom: 1rem;
+      display: block;
+    }
+    .nicho-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.35rem;
+      font-weight: 500;
+      color: var(--gold-light);
+      margin-bottom: 0.5rem;
+    }
+    .nicho-desc {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.8;
+    }
+
+    /* ════════════════════════════════
+       TRANSIÇÃO VISUAL
+    ════════════════════════════════ */
+    #transicao {
+      position: relative;
+      height: 50vh;
+      min-height: 320px;
+      overflow: hidden;
+    }
+    .transicao-bg {
+      position: absolute;
+      inset: 0;
+      background-image: url('fotos/photo-camera-sunset.jpg');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+    }
+    .transicao-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to bottom,
+        var(--dark) 0%,
+        rgba(13,13,11,0.5) 40%,
+        rgba(13,13,11,0.5) 60%,
+        var(--dark) 100%
+      );
+    }
+    .transicao-text {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 2rem;
+    }
+    .transicao-text .section-title {
+      font-size: clamp(1.6rem, 4.5vw, 2.6rem);
+      margin-top: 0.8rem;
+    }
+    .transicao-text p {
+      font-size: 0.82rem;
+      color: rgba(245,240,232,0.6);
+      max-width: 400px;
+      margin-top: 0.8rem;
+    }
+
+    /* ════════════════════════════════
+       PORTFÓLIO DE VÍDEOS
+    ════════════════════════════════ */
+    #portfolio {
+      padding: 6rem 0;
+      background: var(--dark);
+    }
+    .portfolio-head {
+      text-align: center;
+      margin-bottom: 3.5rem;
+    }
+    .portfolio-head .section-title { margin: 0.8rem 0 1rem; }
+    .portfolio-head p {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+    .video-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+    }
+    .video-wrap {
+      position: relative;
+      aspect-ratio: 9/16;
+      overflow: hidden;
+      background: var(--dark-warm);
+      cursor: pointer;
+    }
+    .video-wrap video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .video-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(13,13,11,0.6) 0%, transparent 50%);
+      transition: opacity 0.3s ease;
+    }
+    .video-wrap:hover .video-overlay { opacity: 0; }
+    .video-label {
+      position: absolute;
+      bottom: 0.8rem;
+      left: 0.8rem;
+      font-size: 0.55rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(245,240,232,0.6);
+      z-index: 2;
+    }
+    .video-mute-btn {
+      position: absolute;
+      top: 0.7rem;
+      right: 0.7rem;
+      z-index: 3;
+      background: rgba(13,13,11,0.6);
+      border: 1px solid rgba(201,169,110,0.3);
+      color: var(--gold);
+      font-size: 0.7rem;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border-radius: 50%;
+      transition: all 0.25s;
+    }
+    .video-mute-btn:hover {
+      background: var(--gold);
+      color: var(--dark);
+    }
+
+    /* ════════════════════════════════
+       SERVIÇOS
+    ════════════════════════════════ */
+    #servicos {
+      padding: 7rem 0;
+      background: var(--dark-warm);
+    }
+    .servicos-head { margin-bottom: 3.5rem; }
+    .servicos-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .servicos-table thead tr {
+      border-bottom: 1px solid rgba(201,169,110,0.3);
+    }
+    .servicos-table th {
+      text-align: left;
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      padding: 0 0 1rem;
+      font-weight: 400;
+    }
+    .servicos-table th:last-child { text-align: right; }
+    .servicos-table tbody tr {
+      border-bottom: 1px solid rgba(201,169,110,0.08);
+      transition: background 0.25s ease;
+    }
+    .servicos-table tbody tr:hover {
+      background: rgba(201,169,110,0.04);
+    }
+    .servicos-table td {
+      padding: 1.6rem 0;
+      vertical-align: top;
+    }
+    .srv-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.2rem;
+      font-weight: 500;
+      color: var(--off-white);
+    }
+    .srv-desc {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 0.3rem;
+    }
+    .srv-tag {
+      display: inline-block;
+      font-size: 0.55rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      border: 1px solid rgba(201,169,110,0.3);
+      color: var(--gold);
+      padding: 0.3rem 0.7rem;
+      float: right;
+    }
+
+    /* ════════════════════════════════
+       CTA FINAL
+    ════════════════════════════════ */
+    #contato {
+      padding: 9rem 0;
+      text-align: center;
+    }
+    #contato .section-title {
+      font-size: clamp(2rem, 6vw, 4rem);
+      margin: 1rem 0 1.5rem;
+    }
+    #contato .section-title em {
+      font-style: italic;
+      color: var(--gold-light);
+    }
+    #contato p {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      max-width: 420px;
+      margin: 0 auto 2.5rem;
+    }
+    .cta-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 3.5rem;
+    }
+    .contact-links {
+      display: flex;
+      gap: 2rem;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .contact-link {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      transition: color 0.25s;
+    }
+    .contact-link:hover { color: var(--gold); }
+    .contact-link svg {
+      width: 16px;
+      height: 16px;
+      fill: currentColor;
+    }
+
+    /* ════════════════════════════════
+       FOOTER
+    ════════════════════════════════ */
+    footer {
+      padding: 2rem 1.5rem;
+      border-top: 1px solid rgba(201,169,110,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .footer-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem;
+      color: var(--gold);
+      letter-spacing: 0.12em;
+    }
+    .footer-text {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+    }
+
+    /* ─── KEYFRAMES ─── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    /* ════════════════════════════════
+       MOBILE
+    ════════════════════════════════ */
+    @media (max-width: 768px) {
+      .sobre-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .sobre-img-wrap::before { display: none; }
+      .sobre-img { aspect-ratio: 4/3; object-position: top; }
+      .diferenciais-grid { grid-template-columns: 1fr; }
+      .nichos-grid { grid-template-columns: 1fr; }
+      .video-grid { grid-template-columns: repeat(2, 1fr); }
+      .metrics-inner { grid-template-columns: 1fr; }
+      .metric-item:not(:last-child) { border-right: none; border-bottom: 1px solid rgba(201,169,110,0.15); }
+      .servicos-table thead { display: none; }
+      .servicos-table tbody tr { display: block; padding: 1.5rem 0; }
+      .servicos-table td { display: block; padding: 0.2rem 0; }
+      .srv-tag { float: none; display: inline-block; margin-top: 0.6rem; }
+      footer { justify-content: center; text-align: center; }
+    }
+
+    @media (max-width: 480px) {
+      .video-grid { grid-template-columns: repeat(2, 1fr); gap: 0.6rem; }
+      #hero .hero-h1 { font-size: 2.4rem; }
+      .transicao-bg { background-attachment: scroll; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ─── NAV ─── -->
+  <nav id="nav">
+    <div class="nav-logo">GIU CUBAS</div>
+    <a href="#contato" class="nav-cta">Solicitar Proposta</a>
+  </nav>
+
+  <!-- ═══════════════════════════════
+       HERO
+  ═══════════════════════════════ -->
+  <section id="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <div class="hero-eyebrow">
+        <span class="gold-line"></span>
+        <span class="label">Visual Storyteller &amp; UGC Cinematográfica</span>
+      </div>
+      <h1 class="hero-h1">
+        Não produzo<br>
+        apenas conteúdo.<br>
+        <em>Crio percepção.</em>
+      </h1>
+      <p class="hero-sub">
+        Narrativas visuais cinematográficas para hotéis, pousadas, restaurantes e marcas de lifestyle premium.
+      </p>
+      <div class="hero-actions">
+        <a href="#contato" class="btn-primary">Solicitar Proposta</a>
+        <a href="#portfolio" class="btn-ghost">Ver Portfólio</a>
+      </div>
+    </div>
+    <div class="hero-scroll">
+      <span>scroll</span>
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- ─── METRICS STRIP ─── -->
+  <section id="metrics-strip">
+    <div class="metrics-inner">
+      <div class="metric-item reveal">
+        <div class="metric-num">20k+</div>
+        <div class="metric-label">Seguidores</div>
+      </div>
+      <div class="metric-item reveal" style="transition-delay:.1s">
+        <div class="metric-num">1.6M+</div>
+        <div class="metric-label">Alcance em 90 dias</div>
+      </div>
+      <div class="metric-item reveal" style="transition-delay:.2s">
+        <div class="metric-num">4</div>
+        <div class="metric-label">Nichos Especializados</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════
+       SOBRE
+  ═══════════════════════════════ -->
+  <section id="sobre">
+    <div class="container">
+      <div class="sobre-grid">
+        <div class="sobre-img-wrap reveal">
+          <img src="fotos/photo-smile.jpg" alt="Giu Cubas" class="sobre-img" />
+        </div>
+        <div class="sobre-text reveal" style="transition-delay:.15s">
+          <span class="label">Quem cria sua atmosfera</span>
+          <h2 class="section-title">Sobre<br>Giu Cubas</h2>
+          <blockquote class="sobre-quote">
+            "Transformando experiências em atmosfera."
+          </blockquote>
+          <p class="sobre-body">
+            Artista visual e criadora UGC especializada em narrativas contemplativas, experiências sensoriais e storytelling cinematográfico.
+          </p>
+          <p class="sobre-body">
+            Crio narrativas visuais autorais que transformam lugares, marcas e vivências cotidianas em desejo visual e conexão emocional. Minha produção une sensibilidade artística e estratégia — traduzo conceitos em atmosferas que conectam o público à alma da marca de forma profunda e autêntica.
+          </p>
+          <a href="#contato" class="btn-primary" style="align-self:flex-start;margin-top:.5rem">Vamos criar juntos</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════
+       DIFERENCIAIS
+  ═══════════════════════════════ -->
+  <section id="diferenciais">
+    <div class="container">
+      <div class="diferenciais-head reveal">
+        <span class="label">Por que escolher</span>
+        <h2 class="section-title" style="margin-top:.6rem">Meus Diferenciais</h2>
+      </div>
+      <div class="diferenciais-grid">
+        <div class="diferencial-card reveal">
+          <div class="dif-number">01</div>
+          <div class="dif-title">Estética Cinematográfica Autoral</div>
+          <p class="dif-body">Não é UGC genérico. Cada entrega carrega uma linguagem visual única — contemplativa, sensorial, editorial — que eleva a percepção da sua marca.</p>
+        </div>
+        <div class="diferencial-card reveal" style="transition-delay:.1s">
+          <div class="dif-number">02</div>
+          <div class="dif-title">Produção Completa &amp; Estratégica</div>
+          <p class="dif-body">Gravo, edito e entrego com intenção estratégica. Conteúdos prontos para usar, otimizados para cada plataforma e pensados para gerar desejo real.</p>
+        </div>
+        <div class="diferencial-card reveal" style="transition-delay:.05s">
+          <div class="dif-number">03</div>
+          <div class="dif-title">Alcance Orgânico Comprovado</div>
+          <p class="dif-body">Com 1.6M+ de alcance em 90 dias e comunidade ativa no nicho de experiências, seus conteúdos chegam a quem realmente importa para sua marca.</p>
+        </div>
+        <div class="diferencial-card reveal" style="transition-delay:.15s">
+          <div class="dif-number">04</div>
+          <div class="dif-title">Permanência Emocional</div>
+          <p class="dif-body">Meu conteúdo não busca apenas atenção — busca permanência emocional. Atmosferas que ficam na memória e que transformam espectadores em clientes.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════
+       NICHOS
+  ═══════════════════════════════ -->
+  <section id="nichos">
+    <div class="container">
+      <div class="nichos-head reveal">
+        <span class="label">Especialização</span>
+        <h2 class="section-title" style="margin-top:.6rem">Nichos de Atuação</h2>
+      </div>
+      <div class="nichos-grid">
+        <div class="nicho-card reveal">
+          <span class="nicho-icon">🏨</span>
+          <div class="nicho-name">Turismo &amp; Hotelaria</div>
+          <p class="nicho-desc">Narrativas cinematográficas desenhadas para destinos que valorizam a experiência e o bem-viver. Olhar sensorial para transformar espaços em destinos de desejo.</p>
+        </div>
+        <div class="nicho-card reveal" style="transition-delay:.1s">
+          <span class="nicho-icon">🍽️</span>
+          <div class="nicho-name">Gastronomia</div>
+          <p class="nicho-desc">Produção de conteúdos visuais focados em detalhes e vivências gastronômicas. Valorizando a atmosfera e emoção através de uma linguagem estética, natural e contemplativa.</p>
+        </div>
+        <div class="nicho-card reveal" style="transition-delay:.05s">
+          <span class="nicho-icon">✨</span>
+          <div class="nicho-name">Experiências Sensoriais</div>
+          <p class="nicho-desc">Conteúdos focados na captura de atmosferas, texturas e detalhes que evocam sensações e presença. Para marcas que querem ser sentidas, não apenas vistas.</p>
+        </div>
+        <div class="nicho-card reveal" style="transition-delay:.15s">
+          <span class="nicho-icon">🎨</span>
+          <div class="nicho-name">Lifestyle Artístico</div>
+          <p class="nicho-desc">Storytelling focado no processo criativo e no estilo de vida contemplativo. Curadoria visual para marcas que buscam posicionamento autêntico, orgânico e sofisticado.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════
+       TRANSIÇÃO VISUAL
+  ═══════════════════════════════ -->
+  <section id="transicao">
+    <div class="transicao-bg"></div>
+    <div class="transicao-overlay"></div>
+    <div class="transicao-text reveal">
+      <span class="label">Portfólio</span>
+      <h2 class="section-title">Assista ao meu trabalho</h2>
+      <p>Conteúdos gravados e editados por mim, estrategicamente, em alta qualidade.</p>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════
+       PORTFÓLIO DE VÍDEOS
+  ═══════════════════════════════ -->
+  <section id="portfolio">
+    <div class="container">
+      <div class="portfolio-head reveal">
+        <span class="label">UGC Cinematográfico</span>
+        <h2 class="section-title" style="margin-top:.6rem">Portfólio de Vídeos</h2>
+        <p style="margin-top:.8rem">Clique no ícone de som para ativar o áudio</p>
+      </div>
+      <div class="video-grid">
+
+        <div class="video-wrap reveal">
+          <video
+            id="v1"
+            src="fotos/video1.mov"
+            autoplay
+            muted
+            loop
+            playsinline
+            preload="metadata"
+          ></video>
+          <div class="video-overlay"></div>
+          <div class="video-label">Experiências</div>
+          <button class="video-mute-btn" onclick="toggleMute('v1',this)" aria-label="Ativar som">🔇</button>
+        </div>
+
+        <div class="video-wrap reveal" style="transition-delay:.08s">
+          <video
+            id="v2"
+            src="fotos/video2.mp4"
+            autoplay
+            muted
+            loop
+            playsinline
+            preload="metadata"
+          ></video>
+          <div class="video-overlay"></div>
+          <div class="video-label">Turismo</div>
+          <button class="video-mute-btn" onclick="toggleMute('v2',this)" aria-label="Ativar som">🔇</button>
+        </div>
+
+        <div class="video-wrap reveal" style="transition-delay:.16s">
+          <video
+            id="v3"
+            src="fotos/video3.mov"
+            autoplay
+            muted
+            loop
+            playsinline
+            preload="metadata"
+          ></video>
+          <div class="video-overlay"></div>
+          <div class="video-label">Lifestyle</div>
+          <button class="video-mute-btn" onclick="toggleMute('v3',this)" aria-label="Ativar som">🔇</button>
+        </div>
+
+        <div class="video-wrap reveal" style="transition-delay:.24s">
+          <video
+            id="v4"
+            src="fotos/video4.mov"
+            autoplay
+            muted
+            loop
+            playsinline
+            preload="metadata"
+          ></video>
+          <div class="video-overlay"></div>
+          <div class="video-label">Natureza</div>
+          <button class="video-mute-btn" onclick="toggleMute('v4',this)" aria-label="Ativar som">🔇</button>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════
+       SERVIÇOS
+  ═══════════════════════════════ -->
+  <section id="servicos">
+    <div class="container">
+      <div class="servicos-head reveal">
+        <span class="label">O que entrego</span>
+        <h2 class="section-title" style="margin-top:.6rem">Serviços Criativos</h2>
+      </div>
+      <table class="servicos-table reveal">
+        <thead>
+          <tr>
+            <th>Especialidade</th>
+            <th>Entrega Estratégica</th>
+            <th>Formato</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <div class="srv-name">UGC Cinematográfico</div>
+              <div class="srv-desc">Produção autoral com estética editorial para marcas.</div>
+            </td>
+            <td><div class="srv-desc">Vídeos autorais prontos para uso em redes sociais e campanhas pagas, com tratamento cinematográfico e narrativa emocional.</div></td>
+            <td><span class="srv-tag">Vídeo</span></td>
+          </tr>
+          <tr>
+            <td>
+              <div class="srv-name">Storytelling de Destino</div>
+              <div class="srv-desc">Narrativas que geram desejo de viagem.</div>
+            </td>
+            <td><div class="srv-desc">Séries de conteúdo para hotéis, pousadas e destinos turísticos que transformam experiências em desejo real.</div></td>
+            <td><span class="srv-tag">Vídeo + Foto</span></td>
+          </tr>
+          <tr>
+            <td>
+              <div class="srv-name">Lifestyle &amp; Branding Visual</div>
+              <div class="srv-desc">Posicionamento estético para marcas slow luxury.</div>
+            </td>
+            <td><div class="srv-desc">Curadoria e produção de conteúdo que estabelece identidade visual única e posicionamento premium nas redes.</div></td>
+            <td><span class="srv-tag">Pacote</span></td>
+          </tr>
+          <tr>
+            <td>
+              <div class="srv-name">Fotografia Editorial</div>
+              <div class="srv-desc">Ensaios que capturam a alma da experiência.</div>
+            </td>
+            <td><div class="srv-desc">Imagens autorais com luz natural e composição contemplativa para uso em site, cardápio, redes e materiais institucionais.</div></td>
+            <td><span class="srv-tag">Foto</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════
+       CTA / CONTATO
+  ═══════════════════════════════ -->
+  <section id="contato">
+    <div class="container">
+      <div class="reveal">
+        <span class="label" style="display:block;text-align:center">Vamos trabalhar juntos</span>
+        <h2 class="section-title">
+          Pronto para criar<br>
+          <em>uma atmosfera?</em>
+        </h2>
+        <p>Fale comigo pelo WhatsApp, Instagram ou e-mail. Respondo em até 24h com proposta personalizada.</p>
+        <div class="cta-actions">
+          <a href="https://wa.me/5513981077177?text=Olá%20Giu!%20Vi%20seu%20portfólio%20e%20gostaria%20de%20solicitar%20uma%20proposta%20de%20UGC." target="_blank" rel="noopener" class="btn-primary">
+            💬 Solicitar Proposta via WhatsApp
+          </a>
+        </div>
+        <div class="contact-links">
+          <a href="https://instagram.com/giu.cubas" target="_blank" rel="noopener" class="contact-link">
+            <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+            @giu.cubas
+          </a>
+          <a href="mailto:artesgiu@gmail.com" class="contact-link">
+            <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+            artesgiu@gmail.com
+          </a>
+          <a href="https://wa.me/5513981077177" target="_blank" rel="noopener" class="contact-link">
+            <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            WhatsApp
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── FOOTER ─── -->
+  <footer>
+    <div class="footer-logo">GIU CUBAS</div>
+    <div class="footer-text">Visual Storyteller &amp; UGC Cinematográfica · Cananéia, SP</div>
+    <div class="footer-text">© 2025 Giu Cubas</div>
+  </footer>
+
+  <script>
+    // ─── NAV SCROLL ───
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 60);
+    });
+
+    // ─── HERO LOAD ANIMATION ───
+    document.getElementById('hero').classList.add('loaded');
+
+    // ─── REVEAL ON SCROLL ───
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          revealObserver.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+    // ─── VIDEO MUTE TOGGLE ───
+    function toggleMute(id, btn) {
+      const video = document.getElementById(id);
+      video.muted = !video.muted;
+      btn.textContent = video.muted ? '🔇' : '🔊';
+    }
+
+    // ─── INTERSECTION OBSERVER: play/pause videos when in viewport ───
+    const videoObserver = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        const video = e.target.querySelector('video');
+        if (!video) return;
+        if (e.isIntersecting) {
+          video.play().catch(() => {});
+        } else {
+          video.pause();
+        }
+      });
+    }, { threshold: 0.2 });
+    document.querySelectorAll('.video-wrap').forEach(w => videoObserver.observe(w));
+  </script>
+
+</body>
+</html>
